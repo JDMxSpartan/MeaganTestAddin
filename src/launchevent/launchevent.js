@@ -23,16 +23,56 @@ function onMessageSendHandler(event) {
       return;
     }
   
-    const matches = hasMatches(body);
-    if (matches) {
-      Office.context.mailbox.item.getAttachmentsAsync(
-        { asyncContext: event },
-        getAttachmentsCallback);
-    } else {
-      event.completed({ allowEvent: true });
-    }
+    const banner = getBannerFromBody(body);
+    // Check if the banner is null error
+    bannerNullHandler(banner, event);
+
+    // const matches = hasMatches(body);
+    // if (matches) {
+    //   Office.context.mailbox.item.getAttachmentsAsync(
+    //     { asyncContext: event },
+    //     getAttachmentsCallback);
+    // } else {
+    //   event.completed({ allowEvent: true });
+    // }
   }
   
+  function getBannerFromBody(body) {
+    const banner_regex =
+      /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
+  
+    const banner = body.match(banner_regex);
+    console.log(banner);
+    if (banner) {
+      console.log("banner found");
+      return banner[0];
+    } else {
+      console.log("banner null");
+      return null;
+    }
+  }
+
+  function bannerNullHandler(banner, event){
+
+    if (banner == null) {
+      event.completed(
+        {
+            allowEvent: false,
+             cancelLabel: "Ok",
+             commandId: "msgComposeOpenPaneButton",
+             contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+             errorMessage: "Please enter a banner, banner error detected.",
+        //     //underneath with enable the user to press send anyways, might need later
+             sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
+        }
+        );
+      }
+      else{
+        event.completed({ allowEvent: true });
+      }
+    }
+
+
   function hasMatches(body) {
     if (body == null || body == "") {
       return false;
