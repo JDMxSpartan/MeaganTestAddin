@@ -3,6 +3,9 @@
  * See LICENSE in the project root for license information.
  */
 
+// const { getToRecipientsAsync } = require("./promise.js");
+// import { getToRecipientsAsync } from "./promise.js";
+
 function onMessageSendHandler(event) {
   Promise.all([getToRecipientsAsync(), getSenderAsync(), getBodyAsync(), getCCAsync(), getBCCAsync()]).then(
     ([to, sender, body, cc, bcc]) => {

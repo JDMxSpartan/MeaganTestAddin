@@ -1,0 +1,1 @@
+function getToRecipients(){return new Promise((function(e,t){Office.context.mailbox.item.to.getAsync((function(i){i.status!==Office.AsyncResultStatus.Succeeded?(console.error("Failed to get 'To' recipients. Error: "+JSON.stringify(i.error)),t("Failed to get 'To' recipients.")):e(i.value)}))}))}export{getToRecipients as getToRecipientsAsync};

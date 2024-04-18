@@ -65,6 +65,14 @@ module.exports = async (env, options) => {
       new CopyWebpackPlugin({
         patterns: [
           {
+            from: "./src/launchevent/promise.js",
+            to: "promise.js",
+          },
+        ],
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
             from: "assets/*",
             to: "assets/[name][ext][query]",
           },
